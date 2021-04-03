@@ -1,6 +1,7 @@
 import RPi.GPIO as GPIO
 import time
 from transitions import Machine, State
+from relay import *
 
 
 
@@ -24,14 +25,16 @@ class OurBox:
         self.machine.add_transition('locking', 'unlocked', 'double_locked', after= 'manual_lock')
         
         # GPIO Setup
-        self.lockLED = 17
+        self.lockLED = 20
         self.scanLED = 27
         self.unlockLED = 22
+        self.relay4 = 18
 
         GPIO.setmode(GPIO.BCM)
-        GPIO.setup(self.lockLED, GPIO.OUT)
-        GPIO.setup(self.scanLED, GPIO.OUT)
-        GPIO.setup(self.unlockLED, GPIO.OUT)
+        GPIO.setup(self.lockLED, GPIO.OUT, initial=GPIO.LOW)
+        GPIO.setup(self.scanLED, GPIO.OUT, initial=GPIO.LOW)
+        GPIO.setup(self.unlockLED, GPIO.OUT, initial=GPIO.LOW)
+        GPIO.setup(self.relay4, GPIO.OUT, initial=GPIO.LOW)
 
         # Lock OurBox Instance and begin RFID scan
         self.auto_lock()
@@ -57,6 +60,7 @@ class OurBox:
                 GPIO.output(self.scanLED, GPIO.LOW)
                 time.sleep(0.5)
             else:
+                self.relay()
                 break
             
         GPIO.output(self.scanLED, GPIO.LOW)
@@ -80,6 +84,9 @@ class OurBox:
         GPIO.output(self.lockLED, GPIO.HIGH)
         self.state
         self.rfid_unlocking()
+        
+    def relay(self):
+        GPIO.output(self.relay4, GPIO.HIGH)
         
 try:
     BOX = OurBox()
