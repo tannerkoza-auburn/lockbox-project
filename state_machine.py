@@ -2,7 +2,6 @@ import time
 import RPi.GPIO as GPIO
 from transitions import Machine, State
 from mfrc522 import SimpleMFRC522
-from relay import *
 from facial_rec import *
 
 
@@ -65,7 +64,7 @@ class OurBox:
             print('ACCESS GRANTED. Hello Tanner!\n')
 
         elif user_id == 'Danilo':
-            GPIO.output(self.relay_t, GPIO.HIGH)  # Open Danilo's Compartment
+            GPIO.output(self.relay_d, GPIO.HIGH)  # Open Danilo's Compartment
             print('ACCESS GRANTED. Hello Danilo!\n')
 
         else:
