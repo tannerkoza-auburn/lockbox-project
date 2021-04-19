@@ -11,7 +11,7 @@ import cv2
 
 def facial_rec(self):
     now = timeout_now = time.time()  # Define Starting and Timeout Time
-    wait_time = 7   # Define Wait Duration Before Unlocking
+    wait_time = 5   # Define Wait Duration Before Unlocking
     timeout = 60    # Define Timeout Duration
 
     # Initialize 'currentname' to trigger only when a new person is identified.

@@ -3,6 +3,7 @@ import RPi.GPIO as GPIO
 from transitions import Machine, State
 from mfrc522 import SimpleMFRC522
 from facial_rec import *
+from msg import *
 
 
 # Define Lock Box Class
@@ -53,7 +54,7 @@ class OurBox:
     def relay_ctrl(self, user_id):
         """This functions takes in a user's name and opens their respective compartment.
         """
-
+        
         # Define Opening Logic
         if user_id == 'Justin':
             GPIO.output(self.relay_j, GPIO.HIGH)    # Open Justin's Compartment
@@ -70,6 +71,9 @@ class OurBox:
         else:
             print('PERMISSION DENIED.\n')
             self.denied_locking()   # Trigger Denied Locking to Start RFID Scan
+
+        self.unlockTwo(user_id)
+
 
     # Define State Methods
     def rfid_unlock(self):
@@ -89,7 +93,7 @@ class OurBox:
                 break
             else:
                 print('ACCESS DENIED!\n')
-
+        self.unlockOne()
         self.face_unlocking()   # Initiate Facial Recognition Scan with Recognized Badge
 
     def face_unlock(self):
@@ -109,7 +113,7 @@ class OurBox:
         """
 
         print('LOCKED\n')
-
+        self.Lock
         self.rfid_unlocking()
 
     def manual_lock(self):
@@ -128,15 +132,18 @@ class OurBox:
                 GPIO.output(self.relay_d, GPIO.LOW)
 
                 print('SUCCESSFUL MANUAL LOCK.\n')
+                self.Lock()
                 
                 time.sleep(5)  # Sleep for 5 seconds to avoid RFID unlock
                 break
             else:
                 print('TRY AGAIN!\n')
                 
-    # Define External Facial Recognition Method
+    # Define External Functions/Methods
     facialRec = facial_rec  # Imports facial_rec from facial_rec.py
-
+    unlockOne = unlock_one  # Sends RFID unlocked message
+    unlockTwo = unlock_two  # Sends personalized unlocked message
+    Lock = lock
 
 try:
     print('CTRL + C TO CANCEL/CLEAN.\n')
